@@ -1,0 +1,29 @@
+<font>
+	<info face="chun-ran" size="60" />
+	<common lineHeight="60" scaleW="136" scaleH="165" pages="1" />
+	<pages>
+		<page id="0" file="chun-ran.png" />
+	</pages>
+	<chars count="18">
+		<char id="44" x="59" y="136" width="8" height="14" xoffset="0" yoffset="52" xadvance="11" /><!-- , -->
+		<char id="46" x="84" y="136" width="7" height="8" xoffset="0" yoffset="50" xadvance="10" /><!-- . -->
+		<char id="58" x="128" y="0" width="7" height="20" xoffset="0" yoffset="37" xadvance="10" /><!-- : -->
+		<char id="63" x="113" y="0" width="14" height="40" xoffset="0" yoffset="19" xadvance="17" /><!-- ? -->
+		<char id="12290" x="46" y="136" width="12" height="15" xoffset="0" yoffset="45" xadvance="15" /><!-- 。 -->
+		<char id="20837" x="46" y="106" width="45" height="29" xoffset="0" yoffset="18" xadvance="48" /><!-- 入 -->
+		<char id="21035" x="47" y="57" width="37" height="44" xoffset="0" yoffset="11" xadvance="40" /><!-- 别 -->
+		<char id="28304" x="53" y="0" width="44" height="54" xoffset="0" yoffset="6" xadvance="47" /><!-- 源 -->
+		<char id="29305" x="0" y="106" width="45" height="52" xoffset="0" yoffset="8" xadvance="48" /><!-- 特 -->
+		<char id="35874" x="92" y="55" width="42" height="53" xoffset="0" yoffset="5" xadvance="45" /><!-- 谢 -->
+		<char id="36164" x="92" y="109" width="39" height="55" xoffset="0" yoffset="5" xadvance="42" /><!-- 资 -->
+		<char id="36733" x="0" y="0" width="52" height="56" xoffset="0" yoffset="4" xadvance="55" /><!-- 载 -->
+		<char id="40483" x="0" y="57" width="46" height="48" xoffset="0" yoffset="12" xadvance="49" /><!-- 鸣 -->
+		<char id="65292" x="68" y="136" width="7" height="14" xoffset="0" yoffset="46" xadvance="10" /><!-- ， -->
+		<char id="65306" x="76" y="136" width="7" height="21" xoffset="0" yoffset="31" xadvance="10" /><!-- ： -->
+		<char id="65311" x="98" y="0" width="14" height="40" xoffset="0" yoffset="13" xadvance="17" /><!-- ？ -->
+		<char id="32" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="8" /><!--   -->
+		<char id="9" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="256" /><!-- 	 -->
+	</chars>
+	<kernings count="0">
+	</kernings>
+</font>
