@@ -39,8 +39,11 @@ class Camera extends PIXI.Container {
             hh = core.view.height * .5 + this.distance.y,
             ratio = 1 - exp(-t / 50)
 
-        point.x = ~~(hw - point.x)
-        point.y = ~~(hh - point.y) * ratio
+        point.x = hw - point.x
+        point.y = (hh - point.y) * ratio
+
+        point.x += this.position.x
+        point.y += this.position.y
 
         this.position.copy(point)
     }

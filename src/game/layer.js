@@ -1,5 +1,6 @@
+import {sort, filter} from '../util'
 import * as scenes from '../scenes'
-import {sort} from '../util'
+import Road from './road'
 
 let core
 
@@ -21,7 +22,15 @@ class Layer extends PIXI.Container {
 
         this.addChild(...this.layers)
         this.update()
+    }
 
+    addRoad(...paths) {
+        paths.forEach(path => {
+            this.layers[2].addChild(new Road(
+                path.points,
+                path.fixtureDef
+            ))
+        })
     }
 
     setup(resource) {
@@ -40,6 +49,23 @@ class Layer extends PIXI.Container {
             child && this.layers[2].addChild(child)
         })
 
+        // 添加路径
+        this.addRoad(
+            {
+                points: scenes.road.railway,
+                fixtureDef: {
+                    filterCategoryBits: filter.category.railway,
+                    filterMaskBits: filter.mask.railway
+                }
+            },
+            {
+                points: scenes.road.pathway[0],
+                fixtureDef: {
+                    filterCategoryBits: filter.category.pathway,
+                    filterMaskBits: filter.mask.pathway
+                }
+            }
+        )
 
         function fit(item) {
             let display

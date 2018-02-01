@@ -38,14 +38,21 @@ class View extends PIXI.Container {
     }
 
     listen() {
-        let wait = false
-        window.addEventListener('resize', () => {
-            if (wait) return
-            wait = true
+        const _this = this
+
+        window.addEventListener('resize', resize)
+
+        function resize() {
+            if (_this._destroyed) {
+                window.removeEventListener('resize', resize)
+                return
+            }
+            if (resize.wait) return
+            resize.wait = true
             setTimeout(() => {
-                wait = false
-                this.align()
-            }, 100)
-        })
+                resize.wait = false
+                _this.align()
+            }, 1e2)
+        }
     }
 }
