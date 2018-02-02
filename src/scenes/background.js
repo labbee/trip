@@ -1,9 +1,11 @@
+import {game} from '../game/scope'
+import * as core from '../core'
 import * as util from '../util'
 
-
-export default function(core, resource) {
-
-    const {tree, depot, terrain, dock, misc, paper, house} = resource.misc
+export default function() {
+    const
+        resource = game.resource,
+        {tree, depot, terrain, dock, misc, paper, house} = resource.misc
 
     return [
         {
@@ -259,7 +261,7 @@ export default function(core, resource) {
             x: 12636, y: 555,
             z: -2,
         },
-        (function() {
+        (function () {
             const box = new PIXI.Sprite(house.textures['house.23.png'])
             box.addChild(new PIXI.Sprite(house.textures['house.41.png']))
             box.children[0].position.set(43, -33)
@@ -922,7 +924,7 @@ export default function(core, resource) {
             texture: house.textures['house.8.png'],
             x: 21654, y: 676,
         },
-        (function() {
+        (function () {
             const
                 box = new PIXI.Sprite(house.textures['house.33.png']),
                 roof = new PIXI.Sprite(house.textures['house.35.png']),

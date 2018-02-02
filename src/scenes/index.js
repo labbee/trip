@@ -1,10 +1,10 @@
 import background from './background'
 import foreground from './foreground'
 
-export function init(core, resource) {
+export function init() {
     return {
-        background: format(background(core, resource)),
-        foreground: format(foreground(core, resource))
+        background: format(background()),
+        foreground: format(foreground())
     }
 }
 

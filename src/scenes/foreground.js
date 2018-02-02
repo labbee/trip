@@ -1,7 +1,11 @@
+import {game} from '../game/scope'
+import * as core from '../core'
 import * as util from '../util'
 
-export default function(core, resource) {
-    const {tree, depot, terrain, dock, misc, paper, house} = resource.misc
+export default function() {
+    const
+        resource = game.resource,
+        { tree, depot, terrain, dock, misc, paper, house } = resource.misc
 
     return [
         {
@@ -38,7 +42,7 @@ export default function(core, resource) {
             x: 3489, y: 886,
         },
         /* 水流 */
-        (function() {
+        (function () {
             const
                 river = new PIXI.Container(),
                 width = 2300,
@@ -217,14 +221,14 @@ export default function(core, resource) {
             x: 2775, y: 678,
             rotation: Math.PI / 5,
             alpha: 1,
-            scale: {x: .5, y: 1.2},
+            scale: { x: .5, y: 1.2 },
         },
 
         {
             texture: terrain.textures['terrain.8.png'],
             x: 2568, y: 685,
             alpha: 1,
-            scale: {x: .8, y: 1.5},
+            scale: { x: .8, y: 1.5 },
             z: -1,
         },
         {
@@ -311,7 +315,7 @@ export default function(core, resource) {
             x: 5556, y: 940,
             z: -3,
             alpha: .5,
-            scale: {x: .7, y: 1},
+            scale: { x: .7, y: 1 },
         },
         {
             texture: tree.textures['tree.16.png'],
@@ -344,7 +348,7 @@ export default function(core, resource) {
             texture: terrain.textures['terrain.8.png'],
             x: 6692, y: 726,
             z: 2,
-            scale: {x: 2, y: 1},
+            scale: { x: 2, y: 1 },
         },
         {
             texture: terrain.textures['terrain.46.png'],
@@ -362,7 +366,7 @@ export default function(core, resource) {
             z: 1,
         },
 
-        (function() {
+        (function () {
             const
                 station = new PIXI.Sprite(misc.textures['misc.17.png']),
                 pillar = new PIXI.Sprite(house.textures['house.39.png']),
@@ -475,7 +479,7 @@ export default function(core, resource) {
         },
 
         /* 水流 */
-        (function() {
+        (function () {
             const
                 river = new PIXI.Container(),
                 width = 2800,
@@ -565,7 +569,7 @@ export default function(core, resource) {
         },
 
         /* 晃动的船 */
-        (function() {
+        (function () {
             const
                 ship = new PIXI.Sprite(dock.textures['dock.5.png'])
 
@@ -610,7 +614,7 @@ export default function(core, resource) {
         },
 
         /* 码头 */
-        (function() {
+        (function () {
             const
                 wharf = new PIXI.Sprite(dock.textures['dock.3.png'])
 
@@ -648,7 +652,7 @@ export default function(core, resource) {
         {
             texture: misc.textures['misc.16.png'],
             x: 11778, y: 924,
-            scale: {x: .4, y: 2},
+            scale: { x: .4, y: 2 },
             rotation: -.5,
             z: -3,
         },
@@ -729,7 +733,7 @@ export default function(core, resource) {
             texture: terrain.textures['terrain.12.png'],
             x: 13258, y: 727,
         },
-        (function() {
+        (function () {
             const
                 station = new PIXI.Sprite(misc.textures['misc.17.png']),
                 pillar = new PIXI.Sprite(house.textures['house.39.png']),
@@ -988,7 +992,7 @@ export default function(core, resource) {
             x: 29548, y: -72,
         },
 
-        (function() {
+        (function () {
             const
                 bolt = new PIXI.Sprite(terrain.textures['terrain.27.png']),
                 bell = new PIXI.Sprite(terrain.textures['terrain.24.png']),

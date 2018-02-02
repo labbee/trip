@@ -1,15 +1,14 @@
+import {game} from './scope'
+import * as core from '../core'
+
 const
     prefix = false ? '//cdn.safish.org/trip' : './src',
     result = {}
 
-let core
 
-export default function(_core) {
-    core = _core
-    return async function(callback) {
-        await loadFont()
-        await progress(callback)
-    }
+export default async function(callback) {
+    await loadFont()
+    await progress(callback)
 }
 
 async function progress(callback) {
@@ -34,8 +33,9 @@ async function progress(callback) {
         innerBar.scale.x < total / 100 ? innerBar.scale.x += .02 : null
         if (innerBar.scale.x >= 1) {
             innerBar.scale.x = 1
+            game.resource = result
             container.destroy()
-            callback(result)
+            callback()
             core.ticker.remove(this.fn, this.context)
         }
     })

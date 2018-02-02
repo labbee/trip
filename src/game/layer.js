@@ -1,19 +1,13 @@
+import {game} from './scope'
 import {sort, filter} from '../util'
 import * as scenes from '../scenes'
+import * as core from '../core'
 import Road from './road'
 
-let core
 
-export default function(_core) {
-    core = _core
-    return Layer
-}
-
-
-class Layer extends PIXI.Container {
+export default class Layer extends PIXI.Container {
     constructor() {
         super()
-
         this.layers = [
             new PIXI.Container(),
             new PIXI.Container(),
@@ -21,6 +15,9 @@ class Layer extends PIXI.Container {
         ]
 
         this.addChild(...this.layers)
+
+        this.setup()
+
         this.update()
     }
 
@@ -33,9 +30,9 @@ class Layer extends PIXI.Container {
         })
     }
 
-    setup(resource) {
+    setup() {
         const
-            {background, foreground} = scenes.init(core, resource),
+            {background, foreground} = scenes.init(),
             cmp = (a, b) => a.z - b.z,
             _this = this
 

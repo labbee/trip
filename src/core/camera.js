@@ -1,14 +1,9 @@
+import {core} from './scope'
+
 const
     {max, abs, exp} = Math
 
-let core
-
-export default function(_core) {
-    core = _core
-    return Camera
-}
-
-class Camera extends PIXI.Container {
+export default class Camera extends PIXI.Container {
     constructor() {
         super()
 

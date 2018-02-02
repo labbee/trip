@@ -1,5 +1,9 @@
 export const PI2 = Math.PI * 2
 export {default as sort} from './sort'
+export const point = {
+    start: 1660,
+    end: 27980
+}
 
 export const filter = {
     category: {
@@ -15,4 +19,8 @@ export const filter = {
         tram: 0x0004,
         railway: 0x0002
     }
+}
+
+export function equal(a, b, delta) {
+    return Math.abs(a - b) <= delta
 }

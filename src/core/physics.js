@@ -1,15 +1,10 @@
 import * as planck from 'planck-js'
+import {core} from './scope'
 
 const
     world = planck.World(planck.Vec2(0, 3)),
     ptm = 32,
     step = 1 / ptm
-
-let core
-
-export default function(_core) {
-    core = _core
-}
 
 loop()
 function loop() {
@@ -161,6 +156,9 @@ planck.Body.prototype.createChain = function(points, loop=false, fixtureDef={}) 
 }
 
 planck.Body.prototype.destroy = function() {
+    this.node.rigidBody.collidable = false
+    this.node.rigidBody = null
+    this.node = null
     return world.destroyBody(this)
 }
 

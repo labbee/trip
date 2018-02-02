@@ -1,11 +1,7 @@
-const key = {}
+import * as core from '../core'
 
-let core
+export const key = {}
 
-export default function(_core) {
-    core = _core
-    return key
-}
 
 window.addEventListener('touchstart', ev => {
     const point = ev.touches[0]

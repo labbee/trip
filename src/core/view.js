@@ -1,17 +1,12 @@
+import {core} from './scope'
+
 /*
 * 类似 cocos creator 的 canvas 组件
 * 容器中心始终与屏幕中心对齐
 */
 
-let core
 
-export default function(_core) {
-    core = _core
-    return View
-}
-
-
-class View extends PIXI.Container {
+export default class View extends PIXI.Container {
     constructor() {
         super()
         this.listen()

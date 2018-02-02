@@ -1,7 +1,8 @@
 import 'pixi.js'
-import setPhysics from './physics'
-import setCamera from './camera'
-import setView from './view'
+import './physics'
+import {core} from './scope'
+export {default as Camera} from './camera'
+export {default as View} from './view'
 
 export const setting = {
     width: 1334,
@@ -18,25 +19,18 @@ const app = new PIXI.Application({
     view: document.querySelector('canvas')
 })
 
-const core = {
-    setting,
-    renderer: app.renderer,
-    stage: app.stage,
-    ticker: app.ticker,
-    loader: app.loader,
-    view: app.view
-}
-
-setPhysics(core)
-export const Camera = setCamera(core)
-export const View = setView(core)
+core.renderer = app.renderer
+core.stage = app.stage
+core.view = app.view
+core.ticker = app.ticker
+core.loader = app.loader
+core.setting = setting
 
 export const renderer = app.renderer
 export const stage = app.stage
 export const view = app.view
 export const ticker = app.ticker
 export const loader = app.loader
-
 
 app.renderer.plugins.interaction.mapPositionToPoint = function(point, x, y) {
     let rect
