@@ -3,7 +3,7 @@ import {game} from './scope'
 import {tween, transform} from 'popmotion'
 import * as util from '../util'
 
-const {cos, sin, sqrt, atan2, abs, min} = Math
+const {cos, sin, sqrt, atan2, abs, min, max} = Math
 
 
 
@@ -27,20 +27,7 @@ export default class Tram extends PIXI.Container {
     }
 
     // 相对于 this.body
-    syncPosition(...args) {
-
-        const target = args[0]
-
-        let x, y
-
-        if (args.length === 1) {
-            x = target.offset.x
-            y = target.offset.y
-        } else {
-            x = args[1]
-            y = args[2]
-        }
-
+    syncPosition(target, x, y) {
         const
             s = sqrt(x ** 2 + y ** 2),
             theta = atan2(y, x)
@@ -52,18 +39,21 @@ export default class Tram extends PIXI.Container {
     }
 
     run(direction) {
+        if (this.body.x <= util.point.start && direction < 0 ||
+            this.body.x >= util.point.end && direction > 0) return
+
+        let speed = abs(this.wheelJoints[0].getJointSpeed())
+
         this.direction = direction
         this.torque = 500
-        this.wheelJoints.forEach(joint => {
-            joint.setMaxMotorTorque(this.torque)
-        })
+
+        speed < this.speed ? speed += .06 : speed = this.speed
+
+        this.velocity = speed * this.direction
     }
 
     stop() {
         this.torque = 0
-        this.wheelJoints.forEach(joint => {
-            joint.setMaxMotorTorque(this.torque)
-        })
     }
 
     setDriver(driver) {
@@ -77,59 +67,49 @@ export default class Tram extends PIXI.Container {
     restrict() {
         let v = this.body.rigidBody.getLinearVelocity()
 
-        if (this.body.x < util.point.start + 400 && v.x < 0) {
-            v = min(abs(util.point.start - this.body.x) / 20, 5) * this.direction
-            v < 0 && this.body.x <= util.point.start ? v = 0 : null
-
-            this.wheelJoints.forEach(joint => {
-                joint.setMotorSpeed(v)
-                joint.setMaxMotorTorque(500)
-            })
-
-            return true
-        } else if (this.body.x > util.point.end - 400 && v.x > 0) {
-            v = min(abs(util.point.end - this.body.x) / 20, 5) * this.direction
-            v > 0 && this.body.x >= util.point.end ? v = 0 : null
-
-            this.wheelJoints.forEach(joint => {
-                joint.setMotorSpeed(v)
-                joint.setMaxMotorTorque(500)
-            })
-
-            return true
+        if (v.x === 0) {
+            if (util.equal(this.body.x, util.point.start, 5)) {
+                this.station = 0
+            } else if (util.equal(this.body.x, util.point.end, 5)) {
+                this.station = 1
+            } else this.station = -1
         }
 
-        return false
+        if (this.body.x < util.point.start + 400 && v.x < 0) {
+            this.direction < 0 && this.body.x <= util.point.start ?
+                v = 0 :
+                v = min(max(abs(util.point.start - this.body.x) / 20, 1), 5) * this.direction
+
+            this.velocity = v
+            this.torque = 500
+
+        } else if (this.body.x > util.point.end - 400 && this.velocity > 0) {
+            this.direction > 0 && this.body.x >= util.point.end ?
+                v = 0 :
+                v = min(max(abs(util.point.start - this.body.x) / 20, 1), 5) * this.direction
+
+            this.velocity = v
+            this.torque = 500
+        }
 
     }
 
     update() {
         core.ticker.add(() => {
-            let speed = abs(this.wheelJoints[0].getJointSpeed())
 
             this.syncPosition(this.doors[2], this.doorOffset - 145, -38)
             this.syncPosition(this.doors[3], this.doorOffset + 105, -38)
             this.syncPosition(this.doors[0], -140, -35)
             this.syncPosition(this.doors[1], 105, -35)
-            this.driver && this.syncPosition(this.driver)
+            this.driver &&
+            this.syncPosition(this.driver, this.driver.offset.x, this.driver.offset.y)
 
-            if (this.body.rigidBody.getLinearVelocity().x === 0) {
-                if (util.equal(this.body.x, util.point.start, 5)) {
-                    this.station = 0
-                } else if (util.equal(this.body.x, util.point.end, 5)) {
-                    this.station = 1
-                } else this.station = -1
-            }
+            this.restrict()
 
-            if (this.torque) {
-                speed < this.speed ? speed += .05 : speed = this.speed
-            }
-
-            if (!this.restrict()) {
-                this.wheelJoints.forEach(joint => {
-                    joint.setMotorSpeed(speed * this.direction)
-                })
-            }
+            this.wheelJoints.forEach(joint => {
+                joint.setMotorSpeed(this.velocity)
+                this.driver && joint.setMaxMotorTorque(this.torque)
+            })
         })
     }
 
