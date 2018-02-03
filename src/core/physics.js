@@ -1,5 +1,5 @@
 import * as planck from 'planck-js'
-import {core} from './scope'
+import * as core from './index'
 
 const
     world = planck.World(planck.Vec2(0, 3)),
@@ -59,7 +59,8 @@ world.on('pre-solve', contact => {
 /* pixi */
 PIXI.DisplayObject.prototype.enable = function(options={}) {
     const
-        point = this.getGlobalPosition(),
+        point = this.parent ?
+            this.parent.toLocal(this.getGlobalPosition()) : this.getGlobalPosition(),
         body = world.createBody({
             type: planck.Body.DYNAMIC,
             position: planck.Vec2(point.x * step, point.y * step),

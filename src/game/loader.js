@@ -1,9 +1,11 @@
-import {game} from './scope'
 import * as core from '../core'
+import View from '../core/view'
+import {game} from './scope'
+
 
 const
-    prefix = false ? '//cdn.safish.org/trip' : './src',
-    result = {}
+    prefix = ver === 'production' ? '//cdn.safish.org/trip' : './src',
+    results = {}
 
 
 export default async function(callback) {
@@ -11,16 +13,18 @@ export default async function(callback) {
     await progress(callback)
 }
 
+
+
 async function progress(callback) {
     const
-        container = new core.View(),
+        container = new View(),
         text = new PIXI.extras.BitmapText('载入资源', {font: '60px chun-ran'}),
         innerBar = new PIXI.Graphics().beginFill(0x888888).drawRect(0, 0, 600, 16),
         outerBar = new PIXI.Graphics().beginFill(0xdddddd).drawRect(0, 0, 600, 16)
 
     let moment = 0, total = 0
 
-
+    text.align = 'center'
     outerBar.y += text.height * .9
     innerBar.scale.set(0, 1)
     text.position.set((outerBar.width - text.width) / 2, -text.height * .5)
@@ -32,17 +36,36 @@ async function progress(callback) {
     core.ticker.add(function() {
         innerBar.scale.x < total / 100 ? innerBar.scale.x += .02 : null
         if (innerBar.scale.x >= 1) {
+
+            const button = new PIXI.Sprite(results.misc.button.texture)
+
             innerBar.scale.x = 1
-            game.resource = result
-            container.destroy()
-            callback()
+            game.resource = results
+
+            innerBar.destroy()
+            outerBar.destroy()
+
+            text.text = '为了更好的游戏体验\n建议关闭低电量模式和静音模式'
+            text.position.set(0)
+
+            button.scale.set(.3)
+            button.position.set((text.width - button.width) >> 1, button.height * 2)
+            container.appendChild(button)
+            container.align()
+
+            button.interactive = true
+            button.on('pointerdown', () => {
+                callback()
+                container.destroy()
+            })
+
             core.ticker.remove(this.fn, this.context)
         }
     })
 
     await loadTextures(percent => total = moment + percent * .5)
     moment = total
-    await loadSongs(percent => total = moment + percent * .5)
+    await loadSounds(percent => total = moment + percent * .5)
 }
 
 async function loadFont() {
@@ -57,6 +80,7 @@ function loadTextures(step) {
     return new Promise(resolve => {
         core.loader
             .add('paper', `${prefix}/assets/sprites/paper.png?${hash}`)
+            .add('button', `${prefix}/assets/sprites/button.png?${hash}`)
             .add('water', `${prefix}/assets/sprites/water.png?${hash}`)
             .add('character', `${prefix}/assets/sprites/character.json?${hash}`)
             .add('tram', `${prefix}/assets/sprites/tram.json?${hash}`)
@@ -69,7 +93,7 @@ function loadTextures(step) {
             .add('miscShape', `${prefix}/assets/physics/misc.json?${hash}`)
 
             .load((loader, res) => {
-                result.misc = res
+                results.misc = res
                 resolve()
             })
 
@@ -81,28 +105,38 @@ function loadTextures(step) {
 
 
 
-function loadSongs(step) {
-    const queue = [
-        load(`${prefix}/assets/songs/ambience`),
-        load(`${prefix}/assets/songs/atmos`),
-        load(`${prefix}/assets/songs/bell`),
-        load(`${prefix}/assets/songs/brake`),
-        load(`${prefix}/assets/songs/door_open`)
-    ]
+function loadSounds(step) {
+    const
+        uri = `${prefix}/assets/sounds/`,
+        sounds = {},
+        queue = [
+            load('atmos', {volume: .5, loop: true}),
+            load('brake', {volume: .2}),
+            load('door_open', {volume: .5}),
+            load('journey', {volume: 1}),
+            load('rail_clack', {volume: .5, sprite: {
+                main: [0, 4500]
+            }})
+        ]
+
+
 
     let i = 0
 
-    return Promise.all(queue).then(songs => result.songs = songs)
+
+    return Promise.all(queue).then(() => results.sounds = sounds)
 
 
-    function load(uri) {
+    function load(name, options) {
         return new Promise(resolve => {
             const sound = new Howl({
-                src: [`${uri}.webm`, `${uri}.mp3`]
+                src: [`${uri}${name}.webm`, `${uri}${name}.mp3`],
+                ...options
             })
             sound.once('load', function() {
                 step(++i / queue.length * 100)
-                resolve(sound)
+                sounds[name] = sound
+                resolve()
             })
         })
     }

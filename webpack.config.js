@@ -3,6 +3,7 @@ const
     path = require('path'),
     htmlWebpackPlugin = require('html-webpack-plugin'),
     extractTextPlugin = require('extract-text-webpack-plugin'),
+    uglifyJsPlugin = require('uglifyjs-webpack-plugin'),
     fs = require('fs')
 
 const options = {
@@ -53,6 +54,7 @@ const options = {
     ]
 }
 
+
 if (process.argv.includes('--hotOnly')) {
     options.plugins.push(
         new webpack.NamedModulesPlugin(),
@@ -73,7 +75,7 @@ if (process.argv.includes('--hotOnly')) {
             use: ['style-loader', 'css-loader', 'postcss-loader']
         }
     )
-} else if (process.argv.includes('--build')) {
+} else if (process.argv.includes('-p')) {
     options.output.publicPath = '//cdn.safish.org/trip/'
     options.output.filename = '[name].[chunkhash:4].js'
 
@@ -85,6 +87,14 @@ if (process.argv.includes('--hotOnly')) {
         new webpack.DefinePlugin({
             ver: JSON.stringify('production'),
             hash: JSON.stringify(~~(Date.now() / 1000))
+        }),
+        new uglifyJsPlugin({
+            exclude: /node_modules/,
+            uglifyOptions: {
+                ecma: 5,
+                ie8: false,
+                compress: false
+            }
         })
     )
 

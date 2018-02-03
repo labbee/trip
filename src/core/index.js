@@ -1,8 +1,4 @@
 import 'pixi.js'
-import './physics'
-import {core} from './scope'
-export {default as Camera} from './camera'
-export {default as View} from './view'
 
 export const setting = {
     width: 1334,
@@ -18,13 +14,6 @@ const app = new PIXI.Application({
     backgroundColor: 0xffffff,
     view: document.querySelector('canvas')
 })
-
-core.renderer = app.renderer
-core.stage = app.stage
-core.view = app.view
-core.ticker = app.ticker
-core.loader = app.loader
-core.setting = setting
 
 export const renderer = app.renderer
 export const stage = app.stage

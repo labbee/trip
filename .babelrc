@@ -1,12 +1,5 @@
 {
-    "presets": [
-        ["env", {
-            "targets": {
-                "chrome": 62
-            },
-            "loose": true
-        }]
-    ],
+    "presets": ["env"],
     "plugins": [
         "transform-runtime",
         "transform-object-rest-spread"

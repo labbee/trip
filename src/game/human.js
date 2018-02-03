@@ -1,6 +1,7 @@
 import {tween, chain, easing} from 'popmotion'
 import * as util from '../util'
 import * as core from '../core'
+import {game} from './scope'
 
 const {sin, cos} = Math
 
@@ -23,17 +24,29 @@ export default class Human extends PIXI.Sprite {
         * -1: 正在上/下车
         */
         this.status = 0
+        this.options = options
 
         options.position && this.position.copy(options.position)
-        options.shape && this.enable(options.bodyDef).loadPolygon(options.shape, options.fixtureDef)
 
+        this.setPhysics()
         this.listen()
         this.update()
+    }
+
+    setPhysics() {
+        const options = this.options
+        if (options.shape) {
+            this.enable(options.bodyDef).loadPolygon(options.shape, options.fixtureDef)
+            this.rigidBody.collidable = true
+        }
     }
 
     run(direction) {
         // 车上禁止随意跑动
         if (this.status) return
+        if (this.x >= 29430 && direction > 0) return this.velocity.x = 0, game.ended = true
+        if (this.x <= 524 && direction < 0) return this.velocity.x = 0
+        if (this.arrived && this.x <= 27970 && direction < 0) return this.velocity.x = 0
 
         if (direction !== this.direction) {
             this.direction = direction
@@ -68,8 +81,8 @@ export default class Human extends PIXI.Sprite {
     // 上车
     enter(tram, door) {
         if (this.status !== 0) return
-        const
-            _this = this
+
+        const _this = this
 
         this.status = -1
         this.velocity.x = 0
@@ -103,12 +116,45 @@ export default class Human extends PIXI.Sprite {
     }
 
     // 下车
-    leave() {
+    leave(tram, door) {
+        if (this.status !== 1) return
+        const
+            _this = this,
+            options = this.options
 
+        let walking = false
+
+        this.status = -1
+        this.velocity.x = 0
+        this.isDriver = false
+        tram.driver = null
+        // 掉头
+        this.turn(-this.direction)
+
+        core.ticker.add(function() {
+            if (!_this.turning && _this.parent === tram &&
+                !walking) {
+                walking = true
+                _this.walk(65, 1300).then(() => {
+                    const point = tram.parent.toLocal(_this.getGlobalPosition())
+
+                    walking = false
+                    _this.status = 0
+
+                    tram.parent.addChild(_this)
+                    _this.position.copy(point)
+                    _this.setPhysics()
+                    _this.arrived = true
+
+                    core.ticker.remove(this.fn, this.context)
+                })
+            }
+        })
     }
 
     walk(x, t, amp=.2) {
         this.velocity.x = 0
+
         return new Promise(resolve => {
             x *= this.direction
             const anime = tween({
@@ -124,6 +170,7 @@ export default class Human extends PIXI.Sprite {
                 complete: () => {
                     this.velocity.y = 0
                     this.velocity.x = 0
+                    this.walk.wait = false
                     resolve()
                 }
             })
@@ -131,7 +178,6 @@ export default class Human extends PIXI.Sprite {
     }
 
     listen() {
-        this.rigidBody.collidable = true
         this.on('pre-solve', () => {
             if (this.velocity.x) {
                 this.velocity.y = -this.speed

@@ -1,16 +1,22 @@
 import * as core from '../core'
+import Camera from '../core/camera'
 import load from './loader'
-import {game} from './scope'
 import Layer from './layer'
 import Tram from './tram'
 import Human from './human'
+import {game} from './scope'
 import {filter} from '../util'
 import {key} from './monitor'
+import {tween, easing} from 'popmotion';
+
+import '../core/physics'
+import 'howler'
+
 
 
 load(() => {
     const
-        camera = new core.Camera(),
+        camera = new Camera(),
         layer = new Layer(),
         tram = new Tram({position: {x: 1660, y: 544}}),
         jack = new Human(game.resource.misc.character.textures['character.7.png'], {
@@ -25,15 +31,30 @@ load(() => {
 
     layer.children[1].addChild(tram, jack)
 
-    window.tram = tram
-    window.jack = jack
-    window.key = key
+    game.resource.sounds.atmos.play()
 
     camera.addChild(layer)
     camera.follow(jack)
     core.stage.addChild(camera)
 
-    core.ticker.add(() => {
+    core.ticker.add(function() {
+        if (game.ended) {
+            tween({
+                from: 1,
+                to: 0,
+                duration: 1e3,
+                ease: easing.easeOut
+            }).start({
+                update: v => {
+                    camera.alpha = v
+                },
+
+                complete: goodbye
+            })
+            core.ticker.remove(this.fn, this.context)
+        }
+
+
         if (key.left) {
             jack.isDriver ? tram.run(-1) : jack.run(-1)
         } else if (key.right) {
@@ -55,8 +76,53 @@ load(() => {
             tram.doors[1].toLocal(jack.getGlobalPosition()).x > 16 &&
             jack.enter(tram, tram.doors[1])
         }
+
+        // 终点
+        if (tram.station === 1) {
+            // 开门
+            jack.status === 1 &&
+            !tram.opened &&
+            tram.openDoor()
+
+            // 下车
+            jack.status === 1 &&
+            tram.opened &&
+            jack.leave(tram, tram.doors[1])
+
+        }
     })
 })
+
+
+function goodbye() {
+    const
+        str = '原创作者：Alexander Perrin\n\n特别鸣谢：Vangie',
+        text = new PIXI.Text(str, {
+            align: 'center',
+            fontSize: 36,
+            fill: 0x555555
+        })
+
+    text.pivot.set(text.width >> 1, text.height >> 1)
+    text.position.copy(core.stage.toLocal({
+        x: core.view.width >> 1,
+        y: core.view.height >> 1
+    }))
+    text.alpha = 0
+
+    core.stage.addChild(text)
+
+    tween({
+        from: 0,
+        to: 1,
+        duration: 2e3,
+        ease: easing.easeOut
+    }).start(v => text.alpha = v)
+
+    game.resource.sounds.journey.play()
+
+}
+
 
 resize(0)
 window.addEventListener('resize', resize)

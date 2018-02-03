@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack-dev-server --host 0.0.0.0",
-    "build": "webpack",
+    "build": "webpack -p",
     "deploy": "sh scripts/deploy.sh"
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "popmotion": "^8.1.9",
     "postcss-loader": "^2.0.10",
     "style-loader": "^0.20.1",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
   }

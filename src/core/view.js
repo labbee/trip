@@ -1,4 +1,4 @@
-import {core} from './scope'
+import * as core from './index'
 
 /*
 * 类似 cocos creator 的 canvas 组件
@@ -14,18 +14,18 @@ export default class View extends PIXI.Container {
 
     appendChild(...args) {
         this.addChild(...args)
-        this.pivot.set(this.width / 2, this.height / 2)
         this.align()
     }
 
     appendChildAt(...args) {
         this.addChildAt(...args)
-        this.pivot.set(this.width / 2, this.height / 2)
         this.align()
     }
 
     // 重新对齐
     align() {
+        this.pivot.set(this.width / 2, this.height / 2)
+
         this.position.copy(core.stage.toLocal({
             x: core.view.width >> 1,
             y: core.view.height >> 1

@@ -5,7 +5,7 @@ import * as util from '../util'
 
 const {cos, sin, sqrt, atan2, abs, min, max} = Math
 
-
+const sounds = {}
 
 export default class Tram extends PIXI.Container {
     constructor(options={}) {
@@ -42,8 +42,16 @@ export default class Tram extends PIXI.Container {
         if (this.body.x <= util.point.start && direction < 0 ||
             this.body.x >= util.point.end && direction > 0) return
 
-        let speed = abs(this.wheelJoints[0].getJointSpeed())
+        let speed = this.wheelJoints[0].getJointSpeed()
 
+        if (speed < -1 && this.direction > 0 ||
+            speed > 1 && this.direction < 0) {
+            if (sounds.brake) game.resource.sounds.brake.play(sounds.brake)
+            else sounds.brake = game.resource.sounds.brake.play()
+
+        }
+
+        speed = abs(speed)
         this.direction = direction
         this.torque = 500
 
@@ -67,28 +75,36 @@ export default class Tram extends PIXI.Container {
     restrict() {
         let v = this.body.rigidBody.getLinearVelocity()
 
-        if (v.x === 0) {
+        if (v.x > 3 || v.x < -3) {
+            if (sounds.brake && game.resource.sounds.brake.playing(sounds.brake)) {
+                return game.resource.sounds.rail_clack.pause()
+            }
+
+            if (sounds.rail) game.resource.sounds.rail_clack.play(sounds.rail)
+            else sounds.rail = game.resource.sounds.rail_clack.play('main')
+        }
+
+
+        if (util.equal(v.x, 0, 1e-5)) {
             if (util.equal(this.body.x, util.point.start, 5)) {
                 this.station = 0
             } else if (util.equal(this.body.x, util.point.end, 5)) {
                 this.station = 1
             } else this.station = -1
-        }
+        } else this.station = -1
 
         if (this.body.x < util.point.start + 400 && v.x < 0) {
-            this.direction < 0 && this.body.x <= util.point.start ?
-                v = 0 :
-                v = min(max(abs(util.point.start - this.body.x) / 20, 1), 5) * this.direction
-
-            this.velocity = v
+            if (this.direction < 0) {
+                this.body.x <= util.point.start ? this.velocity = 0 :
+                    this.velocity = min(max(abs(util.point.start - this.body.x) / 20, 1), 5) * this.direction
+            }
             this.torque = 500
 
-        } else if (this.body.x > util.point.end - 400 && this.velocity > 0) {
-            this.direction > 0 && this.body.x >= util.point.end ?
-                v = 0 :
-                v = min(max(abs(util.point.start - this.body.x) / 20, 1), 5) * this.direction
-
-            this.velocity = v
+        } else if (this.body.x > util.point.end - 400 && v.x > 0) {
+            if (this.direction > 0) {
+                this.body.x >= util.point.end ? this.velocity = 0 :
+                    this.velocity = min(max(abs(util.point.end - this.body.x) / 20, 1), 5) * this.direction
+            }
             this.torque = 500
         }
 
@@ -120,6 +136,9 @@ export default class Tram extends PIXI.Container {
                 update: v => this.doorOffset = v,
                 complete: () => this.opened = 1
             })
+
+            sounds.door ? game.resource.sounds.door_open.play(sounds.door) :
+                sounds.door = game.resource.sounds.door_open.play()
         }
     }
 
@@ -130,6 +149,10 @@ export default class Tram extends PIXI.Container {
                 update: v => this.doorOffset = v,
                 complete: () => this.opened = 0
             })
+
+            sounds.door ? game.resource.sounds.door_open.play(sounds.door) :
+                sounds.door = game.resource.sounds.door_open.play()
+
         }
     }
 

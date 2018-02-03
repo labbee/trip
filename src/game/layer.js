@@ -61,6 +61,13 @@ export default class Layer extends PIXI.Container {
                     filterCategoryBits: filter.category.pathway,
                     filterMaskBits: filter.mask.pathway
                 }
+            },
+            {
+                points: scenes.road.pathway[1],
+                fixtureDef: {
+                    filterCategoryBits: filter.category.pathway,
+                    filterMaskBits: filter.mask.pathway
+                }
             }
         )
 

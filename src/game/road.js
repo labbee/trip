@@ -1,3 +1,6 @@
+import * as core from '../core'
+import {key} from './monitor'
+
 export default class Road extends PIXI.Container {
     constructor(points=[], fixtureDef={}, debug=false) {
         super()
@@ -6,7 +9,7 @@ export default class Road extends PIXI.Container {
         this.fixtureDef = fixtureDef
 
         this.setPhysics()
-        this.draw()
+        // this.draw()
     }
 
     setPhysics() {
@@ -61,16 +64,16 @@ export default class Road extends PIXI.Container {
             dot.interactive = true
             dot.delta = {}
             dot.on('pointerdown', event => {
-                if (!global.util.key.shift) {
+                if (!key.shift) {
                     dot.down = true
-                    dot.delta.x = dot.x - event.data.global.x / global.util.ratio
-                    dot.delta.y = dot.y - event.data.global.y / global.util.ratio
+                    dot.delta.x = dot.x - event.data.global.x / core.setting.ratio
+                    dot.delta.y = dot.y - event.data.global.y / core.setting.ratio
                 } else this.removePoint(dot.x, dot.y)
                 event.stopPropagation()
             }).on('pointermove', event => {
                 if (dot.down) {
-                    dot.x = event.data.global.x / global.util.ratio + dot.delta.x
-                    dot.y = event.data.global.y / global.util.ratio + dot.delta.y
+                    dot.x = event.data.global.x / core.setting.ratio + dot.delta.x
+                    dot.y = event.data.global.y / core.setting.ratio + dot.delta.y
                 }
             }).on('pointerup', event => {
                 dot.down = false

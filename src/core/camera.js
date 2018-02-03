@@ -1,4 +1,4 @@
-import {core} from './scope'
+import * as core from './index'
 
 const
     {max, abs, exp} = Math
