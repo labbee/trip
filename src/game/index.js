@@ -7,7 +7,7 @@ import Human from './human'
 import {game} from './scope'
 import {filter} from '../util'
 import {key} from './monitor'
-import {tween, easing} from 'popmotion';
+import {tween, easing} from 'popmotion'
 
 import '../core/physics'
 import 'howler'
