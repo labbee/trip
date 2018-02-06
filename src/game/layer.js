@@ -76,7 +76,7 @@ export default class Layer extends PIXI.Container {
             if (item.display) {
                 display = item.display
             } else if (item.texture) {
-                display = new PIXI.Sprite(item.texture)
+                display = PIXI.Sprite.from(item.texture)
             } else return null
 
             display.config = item

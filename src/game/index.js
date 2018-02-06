@@ -13,13 +13,12 @@ import '../core/physics'
 import 'howler'
 
 
-
 load(() => {
     const
         camera = new Camera(),
         layer = new Layer(),
         tram = new Tram({position: {x: 1660, y: 544}}),
-        jack = new Human(game.resource.misc.character.textures['character.7.png'], {
+        jack = new Human('character.7.png', {
             shape: game.resource.misc.miscShape.data.bodies['jack'].fixtures[0].polygons,
             position: {x: 524, y: 554},
             bodyDef: {fixedRotation: true},

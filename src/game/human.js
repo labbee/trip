@@ -7,7 +7,7 @@ const {sin, cos} = Math
 
 export default class Human extends PIXI.Sprite {
     constructor(texture, options={}) {
-        super(texture)
+        super(PIXI.Texture.from('character.7.png'))
         this.speed = 2
         this.velocity = {x: 0, y: 0}
         this.acceleration = {x: 0, y: 0}

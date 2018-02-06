@@ -21,7 +21,7 @@
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "pixi.js": "^4.7.0",
-    "planck-js": "^0.1.42",
+    "planck-js": "^0.1.43",
     "popmotion": "^8.1.9",
     "postcss-loader": "^2.0.10",
     "style-loader": "^0.20.1",

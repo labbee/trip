@@ -37,7 +37,7 @@ async function progress(callback) {
         innerBar.scale.x < total / 100 ? innerBar.scale.x += .02 : null
         if (innerBar.scale.x >= 1) {
 
-            const button = new PIXI.Sprite(results.misc.button.texture)
+            const button = PIXI.Sprite.from('button')
 
             innerBar.scale.x = 1
             game.resource = results

@@ -157,27 +157,25 @@ export default class Tram extends PIXI.Container {
     }
 
     setup() {
-        const textures = game.resource.misc.tram.textures
-
-        this.body = new PIXI.Sprite(textures['tram.1.png'])
+        this.body = PIXI.Sprite.from('tram.1.png')
 
         this.doors = [
-            new PIXI.Sprite(textures['tram.7.png']),
-            new PIXI.Sprite(textures['tram.7.png']),
-            new PIXI.Sprite(textures['tram.6.png']),
-            new PIXI.Sprite(textures['tram.6.png'])
+            PIXI.Sprite.from('tram.7.png'),
+            PIXI.Sprite.from('tram.7.png'),
+            PIXI.Sprite.from('tram.6.png'),
+            PIXI.Sprite.from('tram.6.png')
         ]
 
         this.axles = [
-            new PIXI.Sprite(textures['tram.3.png']),
-            new PIXI.Sprite(textures['tram.3.png'])
+            PIXI.Sprite.from('tram.3.png'),
+            PIXI.Sprite.from('tram.3.png')
         ]
 
         this.wheels = [
-            new PIXI.Sprite(textures['tram.2.png']),
-            new PIXI.Sprite(textures['tram.2.png']),
-            new PIXI.Sprite(textures['tram.2.png']),
-            new PIXI.Sprite(textures['tram.2.png'])
+            PIXI.Sprite.from('tram.2.png'),
+            PIXI.Sprite.from('tram.2.png'),
+            PIXI.Sprite.from('tram.2.png'),
+            PIXI.Sprite.from('tram.2.png')
         ]
 
         this.options.position && this.body.position.copy(this.options.position)
