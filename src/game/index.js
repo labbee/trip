@@ -124,7 +124,7 @@ function goodbye() {
 
 
 resize(0)
-window.addEventListener('resize', resize)
+window.addEventListener('resize', () => resize())
 
 function resize(t=100) {
     if (resize.wait) return
